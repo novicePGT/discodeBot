@@ -4,6 +4,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 import jj.ac.kr.discordbot.listener.EventListener;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
@@ -27,6 +28,7 @@ public class MainBot {
                 .createDefault(token);
         builder.setStatus(OnlineStatus.ONLINE); // 아이콘의 상태, 온라인이면 초록색 알갱이를 나타냄.
         builder.setActivity(Activity.watching("자바와 함께")); // 활동하는 것을 나타낸다.
+        builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES);
         shardManager = builder.build(); // 토큰이 올바르지 않거나 로그인 예외를 발생시키는지 확인하는 절차를 거침.
 
         // 이벤트리스너 등록 과정
