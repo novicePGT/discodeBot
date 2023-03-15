@@ -28,6 +28,8 @@ public class MainBot {
                 .createDefault(token);
         builder.setStatus(OnlineStatus.ONLINE); // 아이콘의 상태, 온라인이면 초록색 알갱이를 나타냄.
         builder.setActivity(Activity.watching("자바와 함께")); // 활동하는 것을 나타낸다.
+        /* 봇이 답장을 하게 하려면 인텐트 설정을 해야하고, 게이트웨이를 허용해줘야한다. -> 게이트웨이(통신망)를 열고 할 수 있는 기능을 확인하고 싶다면
+        * https://discord-intents-calculator.vercel.app/ 여기로 가자 */
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES);
         shardManager = builder.build(); // 토큰이 올바르지 않거나 로그인 예외를 발생시키는지 확인하는 절차를 거침.
 
