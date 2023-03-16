@@ -34,13 +34,13 @@ public class EventListener extends ListenerAdapter {
             event.getChannel().sendMessage("[１학년] : 23학번입니다. 복학생은 아직 없겠죠? [담당교수: 이영재]").queue();
         }
         if (message.contains("2학년")) {
-            event.getChannel().sendMessage("[２학년] : 22학번입니다. 복학생은 20학번이겠네요. [담당교수: 강응관]").queue();
+            event.getChannel().sendMessage("[２학년] : 22학번입니다. 복학생은 20학번이겠네요. [담당교수: 한동욱]").queue();
         }
         if (message.contains("3학년")) {
-            event.getChannel().sendMessage("[３학년] : 21학번입니다. 복학생은 19학번이겠네요. [담당교수: 한동욱]").queue();
+            event.getChannel().sendMessage("[３학년] : 21학번입니다. 복학생은 19학번이겠네요. [담당교수: 강응관]").queue();
         }
         if (message.contains("4학년")) {
-            event.getChannel().sendMessage("[４학년] : 20학번입니다. 복학생은 18학번이겠네요. 담당교수: 최은복").queue();
+            event.getChannel().sendMessage("[４학년] : 20학번입니다. 복학생은 18학번이겠네요. [담당교수: 최은복]").queue();
         }
     }
 }
