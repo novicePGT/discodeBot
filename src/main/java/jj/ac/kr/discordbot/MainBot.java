@@ -1,12 +1,16 @@
 package jj.ac.kr.discordbot;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import jj.ac.kr.discordbot.commands.CommandManager;
 import jj.ac.kr.discordbot.listener.EventListener;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 
@@ -31,10 +35,13 @@ public class MainBot {
         /* 봇이 답장을 하게 하려면 인텐트 설정을 해야하고, 게이트웨이를 허용해줘야한다. -> 게이트웨이(통신망)를 열고 할 수 있는 기능을 확인하고 싶다면
         * https://discord-intents-calculator.vercel.app/ 여기로 가자 */
         builder.enableIntents(GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES);
+        builder.setMemberCachePolicy(MemberCachePolicy.ALL); // 지연로딩으로 천천히 모든 사용자들을 캐싱한다. 1. 구성원을 캐싱하고
+        builder.setChunkingFilter(ChunkingFilter.ALL); // 필터는 제공된 길드 ID를 기반으로 길드 초기화 시 청킹을 수행할지 여부를 결정한다. 2.시작 시 모두 캐싱하고
+        builder.enableCache(CacheFlag.ONLINE_STATUS); // 3. 온라인 상태 데이터를 저장한다.
         shardManager = builder.build(); // 토큰이 올바르지 않거나 로그인 예외를 발생시키는지 확인하는 절차를 거침.
 
         // 이벤트리스너 등록 과정
-        shardManager.addEventListener(new EventListener());
+        shardManager.addEventListener(new EventListener(), new CommandManager());
     }
 
     /**
