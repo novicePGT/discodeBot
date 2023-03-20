@@ -1,5 +1,6 @@
 package jj.ac.kr.discordbot.commands;
 
+import jj.ac.kr.discordbot.listener.StringConversion;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
