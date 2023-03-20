@@ -33,8 +33,9 @@ public class CommandManager extends ListenerAdapter {
         List<CommandData> commandData = new ArrayList<>();
 
         // Command : /교수정보 <정보>
-        OptionData professorInform = new OptionData(OptionType.STRING, "정보", "물어보고 싶은 정보가 있나요?", true);
+        OptionData professorInform = getProfessorInform();
         commandData.add(Commands.slash("교수정보", "학과 교수님의 정보를 검색합니다.").addOptions(professorInform));
+
 
         event.getGuild().updateCommands().addCommands(commandData).queue();
 
@@ -55,5 +56,15 @@ public class CommandManager extends ListenerAdapter {
             message = "최은복 교수님 - [연구실]: 공학 1관 319호, [번호]: 063-220-2937";
         }
         return message;
+    }
+
+    @NotNull
+    private OptionData getProfessorInform() {
+        OptionData professorInform = new OptionData(OptionType.STRING, "정보", "물어보고 싶은 정보가 있나요?", true)
+                .addChoice("이영재 교수님", "이영재")
+                .addChoice("한동욱 교수님", "한동욱")
+                .addChoice("강응관 교수님", "강응관")
+                .addChoice("최은복 교수님", "최은복");
+        return professorInform;
     }
 }
