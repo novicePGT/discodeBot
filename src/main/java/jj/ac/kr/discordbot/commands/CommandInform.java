@@ -1,6 +1,5 @@
 package jj.ac.kr.discordbot.commands;
 
-import jj.ac.kr.discordbot.listener.StringConversion;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -14,14 +13,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandManager extends ListenerAdapter {
+public class CommandProfessorInform extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String command = event.getName();
 
         if (command.equals("교수정보")) {
-            OptionMapping messageOption = event.getOption("정보");
+            OptionMapping messageOption = event.getOption("교수정보");
             String message = messageOption.getAsString();
             message = getProfessorName(message);
 
@@ -36,7 +35,6 @@ public class CommandManager extends ListenerAdapter {
         // Command : /교수정보 <정보>
         OptionData professorInform = getProfessorInform();
         commandData.add(Commands.slash("교수정보", "학과 교수님의 정보를 검색합니다.").addOptions(professorInform));
-
 
         event.getGuild().updateCommands().addCommands(commandData).queue();
 
@@ -61,7 +59,7 @@ public class CommandManager extends ListenerAdapter {
 
     @NotNull
     private OptionData getProfessorInform() {
-        OptionData professorInform = new OptionData(OptionType.STRING, "정보", "물어보고 싶은 정보가 있나요?", true)
+        OptionData professorInform = new OptionData(OptionType.STRING, "교수정보", "물어보고 싶은 정보가 있나요?", true)
                 .addChoice("이영재 교수님", "이영재")
                 .addChoice("한동욱 교수님", "한동욱")
                 .addChoice("강응관 교수님", "강응관")

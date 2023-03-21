@@ -1,7 +1,7 @@
 package jj.ac.kr.discordbot;
 
 import io.github.cdimascio.dotenv.Dotenv;
-import jj.ac.kr.discordbot.commands.CommandManager;
+import jj.ac.kr.discordbot.commands.CommandInform;
 import jj.ac.kr.discordbot.listener.EventListener;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -41,7 +41,7 @@ public class MainBot {
         shardManager = builder.build(); // 토큰이 올바르지 않거나 로그인 예외를 발생시키는지 확인하는 절차를 거침.
 
         // 이벤트리스너 등록 과정
-        shardManager.addEventListener(new EventListener(), new CommandManager());
+        shardManager.addEventListener(new EventListener(), new CommandInform());
     }
 
     /**
