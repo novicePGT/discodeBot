@@ -1,5 +1,7 @@
 package jj.ac.kr.discordbot.commands;
 
+import jj.ac.kr.discordbot.commands.custom.CustomOptionData;
+import jj.ac.kr.discordbot.commands.place.PlaceInform;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -12,8 +14,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class CommandProfessorInform extends ListenerAdapter {
+public class CommandInform extends ListenerAdapter {
 
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
@@ -26,6 +29,14 @@ public class CommandProfessorInform extends ListenerAdapter {
 
             event.reply("데이터가 서버로 전송되었습니다 !\n\n" + message).setEphemeral(true).queue();
         }
+
+        if (command.equals("위치정보")) {
+            OptionMapping messageOption = event.getOption("위치정보");
+            String message = messageOption.getAsString();
+            message = "메세지 설정 확인";
+
+            event.reply("위치정보를 찾았습니다 ! \n\n" + message).setEphemeral(true).queue();
+        }
     }
 
     @Override
@@ -36,8 +47,19 @@ public class CommandProfessorInform extends ListenerAdapter {
         OptionData professorInform = getProfessorInform();
         commandData.add(Commands.slash("교수정보", "학과 교수님의 정보를 검색합니다.").addOptions(professorInform));
 
+        OptionData universityPlaceInform = getUniversityPlaceInform();
+        commandData.add(Commands.slash("위치정보", "학교 건물의 위치를 검색합니다.").addOptions(universityPlaceInform));
+
         event.getGuild().updateCommands().addCommands(commandData).queue();
 
+    }
+
+    private OptionData getUniversityPlaceInform() {
+        PlaceInform placeInform = new PlaceInform();
+        OptionData universityPlaceInform = new CustomOptionData(OptionType.STRING, "위치정보", "어디로 가고싶나요?", true)
+                .customAdd(placeInform.locationInform());
+
+        return universityPlaceInform;
     }
 
     @NotNull
