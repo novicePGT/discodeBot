@@ -3,6 +3,7 @@ package jj.ac.kr.discordbot.commands;
 import jj.ac.kr.discordbot.commands.custom.CustomOptionData;
 import jj.ac.kr.discordbot.commands.place.PlaceInform;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -12,6 +13,8 @@ import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -19,9 +22,12 @@ import java.util.List;
 
 public class CommandInform extends ListenerAdapter {
 
+    Logger logger = LoggerFactory.getLogger(CommandInform.class);
+
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
         String command = event.getName();
+        User user = event.getUser();
 
         if (command.equals("교수정보")) {
             OptionMapping messageOption = event.getOption("교수정보");
@@ -29,6 +35,8 @@ public class CommandInform extends ListenerAdapter {
             message = getProfessorName(message);
 
             event.reply("데이터가 서버로 전송되었습니다 !\n\n" + message).setEphemeral(true).queue();
+
+            logger.info("{}님이 교수정보를 검색했습니다.", user);
         }
 
         if (command.equals("전공관위치정보")) {
@@ -47,6 +55,8 @@ public class CommandInform extends ListenerAdapter {
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
             event.reply("위치정보를 찾았습니다 ! \n\n" + message + "의 정보를 임베드 합니다.").setEphemeral(true).queue();
+
+            logger.info("{}님이 전공관 위치정보를 검색했습니다.", user);
         }
 
         if (command.equals("별관위치정보")) {
@@ -56,6 +66,8 @@ public class CommandInform extends ListenerAdapter {
             message = "별관 위치정보 메세지 설정 확인";
 
             event.reply("위치정보를 찾았습니다 ! \n\n" + message).setEphemeral(true).queue();
+
+            logger.info("{}님이 별관 위치정보를 검색했습니다.", user);
         }
     }
 
