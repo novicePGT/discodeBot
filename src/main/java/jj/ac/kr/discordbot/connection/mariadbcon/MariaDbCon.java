@@ -8,7 +8,7 @@ public class MariaDbCon {
     private Statement statement;
     private ResultSet resultSet;
 
-    public void dbCon() throws SQLException {
+    public Statement dbCon() throws SQLException {
         try {
             // Mariadb 드라이버 로드
             Class.forName("org.mariadb.jdbc.Driver");
@@ -30,5 +30,7 @@ public class MariaDbCon {
             if (statement != null) { statement.close(); }
             if (resultSet != null) { resultSet.close(); }
         }
+
+        return statement;
     }
 }
