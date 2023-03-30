@@ -2,6 +2,7 @@ package jj.ac.kr.discordbot;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import jj.ac.kr.discordbot.commands.CommandInform;
+import jj.ac.kr.discordbot.connection.mariadbcon.MariaDbCon;
 import jj.ac.kr.discordbot.listener.EventListener;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
@@ -13,6 +14,7 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
+import java.sql.SQLException;
 
 public class MainBot {
 
@@ -63,9 +65,16 @@ public class MainBot {
     public static void main(String[] args) {
         try {
             MainBot bot = new MainBot();
-        }catch (LoginException loginException) {
+        }catch (LoginException e) {
             System.out.println("[MAIN] : LoginException !! ");
             System.out.println("[HOW TO SOLVED] : Check your token validity");
+        }
+
+        try {
+            MariaDbCon mariaDbCon = new MariaDbCon();
+            mariaDbCon.dbCon();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
