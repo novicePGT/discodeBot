@@ -2,6 +2,8 @@ package jj.ac.kr.discordbot.commands;
 
 import jj.ac.kr.discordbot.commands.custom.CustomOptionData;
 import jj.ac.kr.discordbot.commands.place.PlaceInform;
+import jj.ac.kr.discordbot.connection.mariadbcon.DbData;
+import lombok.SneakyThrows;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
@@ -24,8 +26,10 @@ public class CommandInform extends ListenerAdapter {
 
     Logger logger = LoggerFactory.getLogger(CommandInform.class);
 
+    @SneakyThrows
     @Override
     public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
+        DbData dbData = new DbData();
         String command = event.getName();
         User user = event.getUser();
 
@@ -44,14 +48,15 @@ public class CommandInform extends ListenerAdapter {
 
             String message = messageOption.getAsString();
 
+            String findToDatabase = dbData.findToDb(message);
+
             EmbedBuilder embed = new EmbedBuilder();
 
             embed.setTitle("전공관위치정보");
             embed.setDescription("어디로 가야하는지 알려드릴게요.");
             embed.setColor(new Color(232, 109, 255));
-
             embed.setThumbnail("https://cdn.discordapp.com/attachments/1089918255134679101/1089918775874293880/2023-03-27_11.27.57.png");
-            embed.setImage("https://cdn.discordapp.com/attachments/1089918255134679101/1089919277907312783/2023-03-27_11.29.56.png");
+            embed.setImage(findToDatabase);
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
             event.reply("위치정보를 찾았습니다 ! \n\n" + message + "의 정보를 임베드 합니다.").setEphemeral(true).queue();
@@ -63,7 +68,17 @@ public class CommandInform extends ListenerAdapter {
             OptionMapping messageOption = event.getOption("별관위치정보");
 
             String message = messageOption.getAsString();
-            message = "별관 위치정보 메세지 설정 확인";
+
+            String findToDatabase = dbData.findToDb(message);
+
+            EmbedBuilder embed = new EmbedBuilder();
+
+            embed.setTitle("별관위치정보");
+            embed.setDescription("어디로 가야하는지 알려드릴게요.");
+            embed.setColor(new Color(69, 225, 255));
+            embed.setThumbnail("https://cdn.discordapp.com/attachments/1089918255134679101/1089918775874293880/2023-03-27_11.27.57.png");
+            embed.setImage(findToDatabase);
+            event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
             event.reply("위치정보를 찾았습니다 ! \n\n" + message).setEphemeral(true).queue();
 
