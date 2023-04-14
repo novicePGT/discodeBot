@@ -1,6 +1,10 @@
 package jj.ac.kr.discordbot.connection.mariadbcon;
 
+import jj.ac.kr.discordbot.connection.EmbedItem;
+
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DbData {
 
@@ -14,8 +18,8 @@ public class DbData {
     private Connection connection = null;
     private Statement statement = null;
 
-    public String findToDb(String data) throws SQLException {
-        String valueUrl = null;
+    public List<EmbedItem> findToDb(String data) throws SQLException {
+        List<EmbedItem> embedItems = new ArrayList<>();
         try {
             Class.forName(JDBC_DRIVER);
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
@@ -25,7 +29,12 @@ public class DbData {
             while (resultSet.next()) {
                 String valueColum = resultSet.getString("urlName");
                 if (valueColum.equals(data)) {
-                    valueUrl = resultSet.getString("url");
+                    String valueUrl = resultSet.getString("url");
+                    String valueDistanceToNew = resultSet.getString("distanceToNew");
+                    String valueDistanceToOld = resultSet.getString("distanceToOld");
+
+                    EmbedItem embedItem = new EmbedItem(valueColum, valueUrl, valueDistanceToNew, valueDistanceToOld);
+                    embedItems.add(embedItem);
                 }
             }
             System.out.println("[DB]: 정보 조회 완료 ");
@@ -40,6 +49,6 @@ public class DbData {
             }
         }
 
-        return valueUrl;
+        return embedItems;
     }
 }
