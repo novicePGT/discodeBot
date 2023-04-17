@@ -82,6 +82,8 @@ public class CommandInform extends ListenerAdapter {
             embed.setDescription("어디로 가야하는지 알려드릴게요.");
             embed.setColor(new Color(69, 225, 255));
             embed.setThumbnail("https://cdn.discordapp.com/attachments/1089918255134679101/1089918775874293880/2023-03-27_11.27.57.png");
+            embed.addField("구정문으로부터",distanceToOld,true);
+            embed.addField("신정문으로부터",distanceToNew, true);
             embed.setImage(findToDatabase.get(0).getUrl());
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
