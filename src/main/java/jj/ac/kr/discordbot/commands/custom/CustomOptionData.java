@@ -18,4 +18,11 @@ public class CustomOptionData extends OptionData {
         return this;
     }
 
+    public OptionData examListAdd(@NotNull List<ExamItem> examItemList) {
+        for (int i=0; i<examItemList.size(); i++) {
+            super.addChoice(examItemList.get(i).getName(), examItemList.get(i).getValue());
+        }
+        return this;
+    }
+
 }
