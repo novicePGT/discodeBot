@@ -2,6 +2,8 @@ package jj.ac.kr.discordbot.commands;
 
 import jj.ac.kr.discordbot.commands.custom.CustomOptionData;
 import jj.ac.kr.discordbot.commands.place.PlaceInform;
+import jj.ac.kr.discordbot.commands.question.QuestionSet;
+import jj.ac.kr.discordbot.connection.EmbedExamItem;
 import jj.ac.kr.discordbot.connection.EmbedItem;
 import jj.ac.kr.discordbot.connection.mariadbcon.DbData;
 import lombok.SneakyThrows;
@@ -9,12 +11,15 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.guild.GuildReadyEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +30,9 @@ import java.util.List;
 
 public class CommandInform extends ListenerAdapter {
 
-    Logger logger = LoggerFactory.getLogger(CommandInform.class);
+    private Logger logger = LoggerFactory.getLogger(CommandInform.class);
+
+    private String answer;
 
     @SneakyThrows
     @Override
@@ -63,7 +70,7 @@ public class CommandInform extends ListenerAdapter {
             embed.setImage(findToDatabase.get(0).getUrl());
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
-            event.reply("위치정보를 찾았습니다 ! \n\n" + message + "의 정보를 임베드 합니다.").setEphemeral(true).queue();
+            event.reply("위치정보를 찾았습니다 ! \n\n" + message + "의 정보를 임베드합니다.").setEphemeral(true).queue();
 
             logger.info("{}님이 전공관 위치정보를 검색했습니다.", user);
         }
@@ -87,9 +94,50 @@ public class CommandInform extends ListenerAdapter {
             embed.setImage(findToDatabase.get(0).getUrl());
             event.getChannel().sendMessageEmbeds(embed.build()).queue();
 
-            event.reply("위치정보를 찾았습니다 ! \n\n" + message).setEphemeral(true).queue();
+            event.reply("위치정보를 찾았습니다 ! \n\n" + message + "의 정보를 임베드합니다.").setEphemeral(true).queue();
 
             logger.info("{}님이 별관 위치정보를 검색했습니다.", user);
+        }
+
+        if (command.equals("자바기본테스트")) {
+            OptionMapping messageOption = event.getOption("자바기본테스트");
+
+            String message = messageOption.getAsString();
+
+            List<EmbedExamItem> findExamToDb = dbData.findExamToDb(message);
+
+            answer = findExamToDb.get(0).getAnswer();
+
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.setTitle("자바기본테스트");
+            embed.setDescription("자바를 얼마나 배웠는지 테스트합니다.");
+            embed.setColor(new Color(50, 255, 80));
+            embed.setThumbnail("https://cdn.discordapp.com/attachments/1089918255134679101/1089918775874293880/2023-03-27_11.27.57.png");
+            embed.addField("문제: ", findExamToDb.get(0).getQuestion(), true);
+            embed.addField("보기 1. ", findExamToDb.get(0).getView1(), false);
+            embed.addField("보기 2. ", findExamToDb.get(0).getView2(), false);
+            embed.addField("보기 3. ", findExamToDb.get(0).getView3(), false);
+            embed.addField("보기 4. ", findExamToDb.get(0).getView4(), false);
+            Button button1 = Button.primary("view1", "보기 1번");
+            Button button2 = Button.primary("view2", "보기 2번");
+            Button button3 = Button.primary("view3", "보기 3번");
+            Button button4 = Button.primary("view4", "보기 4번");
+
+            MessageAction messageAction = event.getChannel().sendMessageEmbeds(embed.build()).setActionRow(button1, button2, button3, button4);
+            messageAction.queue();
+
+            event.reply("테스트 정보 확장중..." + message).setEphemeral(true).queue();
+
+            logger.info("{}님이 자바 기본 테스트를 진행했습니다.", user);
+        }
+    }
+
+    @Override
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        if (event.getButton().getId().equals(answer)) {
+            event.reply("정답입니다!").setEphemeral(true).queue();
+        } else {
+            event.reply("오답입니다!").setEphemeral(true).queue();
         }
     }
 
@@ -106,6 +154,9 @@ public class CommandInform extends ListenerAdapter {
 
         OptionData universityLocationInform2 = getUniversityLocationInform2();
         commandData.add(Commands.slash("별관위치정보", "학교 건물의 위치를 검색합니다.").addOptions(universityLocationInform2));
+
+        OptionData javaBasicExamination = getJavaBasicExamination();
+        commandData.add(Commands.slash("자바기본테스트", "자바를 얼마나 학습했는지 테스트해보세요.").addOptions(javaBasicExamination));
 
         event.getGuild().updateCommands().addCommands(commandData).queue();
 
@@ -125,6 +176,14 @@ public class CommandInform extends ListenerAdapter {
                 .customAdd(placeInform.locationInform2());
 
         return universityPlaceInform;
+    }
+
+    private OptionData getJavaBasicExamination() {
+        QuestionSet questionSet = new QuestionSet();
+        OptionData javaBasicExamination = new CustomOptionData(OptionType.STRING, "자바기본테스트", "자바에 대해 얼마나 학습했는지 테스트해보세요.", true)
+                .examListAdd(questionSet.questionInform());
+
+        return javaBasicExamination;
     }
 
     @NotNull

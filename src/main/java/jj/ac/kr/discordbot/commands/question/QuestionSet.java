@@ -10,7 +10,7 @@ public class QuestionSet {
     List<ExamItem> examItems = new ArrayList<>();
 
     private String[] examQuestion = {
-            "자바의 특징", "자바의 단점", "자바 프로그래밍의 실행과정"
+            "자바의 장점", "자바의 단점", "자바 컴파일러", "자바 바이트코드", "자바 가상머신(JVM)"
     };
 
     public List<ExamItem> questionInform() {

@@ -14,7 +14,9 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 
-public class MainBot {
+public class
+
+MainBot {
 
     private final Dotenv config;
     private final ShardManager shardManager;
