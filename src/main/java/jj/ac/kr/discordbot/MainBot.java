@@ -2,7 +2,12 @@ package jj.ac.kr.discordbot;
 
 import io.github.cdimascio.dotenv.Dotenv;
 import jj.ac.kr.discordbot.commands.CommandInform;
+import jj.ac.kr.discordbot.commands.CommandManager;
 import jj.ac.kr.discordbot.listener.EventListener;
+import jj.ac.kr.discordbot.listener.Listeners;
+import jj.ac.kr.discordbot.music.Play;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -14,12 +19,11 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import javax.security.auth.login.LoginException;
 
-public class
-
-MainBot {
+public class MainBot {
 
     private final Dotenv config;
     private final ShardManager shardManager;
+
 
     /**
      * 환경 변수를 로드하고, 샤드 매니저를 빌드한다.
@@ -44,6 +48,12 @@ MainBot {
 
         // 이벤트리스너 등록 과정
         shardManager.addEventListener(new EventListener(), new CommandInform());
+
+        JDA jda = JDABuilder.createDefault(token).build();
+        jda.addEventListener(new Listeners());
+        CommandManager commandManager = new CommandManager();
+        commandManager.add(new Play());
+        jda.addEventListener(commandManager);
     }
 
     /**

@@ -126,18 +126,22 @@ public class CommandInform extends ListenerAdapter {
             MessageAction messageAction = event.getChannel().sendMessageEmbeds(embed.build()).setActionRow(button1, button2, button3, button4);
             messageAction.queue();
 
-            event.reply("테스트 정보 확장중..." + message).setEphemeral(true).queue();
+            event.reply(message + "문제를 임베드합니다.").setEphemeral(true).queue();
 
-            logger.info("{}님이 자바 기본 테스트를 진행했습니다.", user);
+            logger.info("{}님이 자바 기본 테스트의 {}문제를 진행했습니다.", user, message);
         }
     }
 
+    @SneakyThrows
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        User user = event.getUser();
         if (event.getButton().getId().equals(answer)) {
             event.reply("정답입니다!").setEphemeral(true).queue();
+            logger.info("{}님이 자바 기본테스트 문제를 맞췄습니다.", user);
         } else {
             event.reply("오답입니다!").setEphemeral(true).queue();
+            logger.info("{}님이 자바 기본테스트 문제를 틀렸습니다.", user);
         }
     }
 
