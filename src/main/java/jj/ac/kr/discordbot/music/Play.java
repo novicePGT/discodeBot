@@ -11,6 +11,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class Play implements ICommand {
     @Override
     public List<OptionData> getOptions() {
         List<OptionData> options = new ArrayList<>();
-        options.add(new OptionData(OptionType.STRING, "url", "Input Your url", true));
+        options.add(new OptionData(OptionType.STRING, "url", "Input your url or text", true));
         return options;
     }
 
@@ -41,7 +43,7 @@ public class Play implements ICommand {
         GuildVoiceState voiceState = member.getVoiceState();
 
         if (!voiceState.inAudioChannel()) {
-            event.reply("음악을 재생하기 전에 방에 먼저 들어가주세요.").queue();
+            event.reply("음악을 재생하기 전에 방에 먼저 들어가주세요.").setEphemeral(true).queue();
             return;
         }
 
@@ -53,14 +55,22 @@ public class Play implements ICommand {
             event.getGuild().getAudioManager().openAudioConnection(voiceState.getChannel());
         } else {
             if (selfVoiceState.getChannel() != voiceState.getChannel()) {
-                event.reply("같은 채널 안에 있어야합니다.");
+                event.reply("같은 채널 안에 있어야합니다.").setEphemeral(true).queue();
                 return;
             }
         }
 
+        String name = event.getOption("url").getAsString();
+        try {
+            new URI(name);
+        } catch (URISyntaxException e) {
+            name = "ytsearch:" + name;
+        }
+
         PlayerManager playerManager = PlayerManager.get();
-        event.reply("Playing").queue();
+        event.reply("Playing...").queue();
+        playerManager.play(event.getGuild(), name);
+
         logger.info("{}님이 Play 기능을 사용했습니다.", member);
-        playerManager.play(event.getGuild(), event.getOption("url").getAsString());
     }
 }
