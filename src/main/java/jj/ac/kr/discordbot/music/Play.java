@@ -1,8 +1,6 @@
 package jj.ac.kr.discordbot.music;
 
 import jj.ac.kr.discordbot.commands.ICommand;
-import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -11,8 +9,8 @@ import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,8 +60,8 @@ public class Play implements ICommand {
 
         String name = event.getOption("url").getAsString();
         try {
-            new URI(name);
-        } catch (URISyntaxException e) {
+            new URL(name);
+        } catch (MalformedURLException e) {
             name = "ytsearch:" + name;
         }
 
@@ -71,6 +69,6 @@ public class Play implements ICommand {
         event.reply("Playing...").queue();
         playerManager.play(event.getGuild(), name);
 
-        logger.info("{}님이 Play 기능을 사용했습니다.", member);
+        logger.info("{}님이 Play 기능을 사용했습니다.", member + name);
     }
 }
