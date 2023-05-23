@@ -4,13 +4,17 @@ import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeAudioSourceManager;
+import com.sedmelluq.discord.lavaplayer.source.youtube.YoutubeSearchProvider;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 import net.dv8tion.jda.api.entities.Guild;
+import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class PlayerManager {
 
@@ -49,8 +53,8 @@ public class PlayerManager {
             }
 
             @Override
-            public void playlistLoaded(AudioPlaylist audioPlaylist) {
-
+            public void playlistLoaded(AudioPlaylist playlist) {
+                guildMusicManager.getTrackScheduler().queue(playlist.getTracks().get(0));
             }
 
             @Override

@@ -5,7 +5,7 @@ import jj.ac.kr.discordbot.commands.CommandInform;
 import jj.ac.kr.discordbot.commands.CommandManager;
 import jj.ac.kr.discordbot.listener.EventListener;
 import jj.ac.kr.discordbot.listener.Listeners;
-import jj.ac.kr.discordbot.music.Play;
+import jj.ac.kr.discordbot.music.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -53,6 +53,11 @@ public class MainBot {
         jda.addEventListener(new Listeners());
         CommandManager commandManager = new CommandManager();
         commandManager.add(new Play());
+        commandManager.add(new Queue());
+        commandManager.add(new Skip());
+        commandManager.add(new Stop());
+        commandManager.add(new NowPlaying());
+        commandManager.add(new Repeat());
         jda.addEventListener(commandManager);
     }
 
