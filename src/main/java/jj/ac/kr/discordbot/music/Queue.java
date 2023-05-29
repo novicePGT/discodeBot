@@ -20,7 +20,7 @@ public class Queue implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Will display the current queue";
+        return "대기열에 있는 목록을 보여드릴게요.";
     }
 
     @Override

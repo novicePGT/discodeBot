@@ -16,7 +16,7 @@ public class Stop implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Will stop the bot playing";
+        return "전주대와 함께 음악을 들어주셔서 고마워요.";
     }
 
     @Override

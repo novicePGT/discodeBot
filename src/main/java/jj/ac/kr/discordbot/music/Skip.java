@@ -16,7 +16,7 @@ public class Skip implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Will skip the current song";
+        return "다음 음악으로 넘어가시겠어요?";
     }
 
     @Override

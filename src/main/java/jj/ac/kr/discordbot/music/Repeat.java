@@ -16,7 +16,7 @@ public class Repeat implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Will toggle repeating...";
+        return "음악을 반복해요.";
     }
 
     @Override

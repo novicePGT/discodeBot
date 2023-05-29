@@ -1,6 +1,5 @@
 package jj.ac.kr.discordbot.music;
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackInfo;
 import jj.ac.kr.discordbot.commands.ICommand;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -19,7 +18,7 @@ public class NowPlaying implements ICommand {
 
     @Override
     public String getDescription() {
-        return "Will display the current playing music";
+        return "현재 재생되는 노래를 보여드릴게요.";
     }
 
     @Override

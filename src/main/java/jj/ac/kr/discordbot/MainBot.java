@@ -58,6 +58,7 @@ public class MainBot {
         commandManager.add(new Stop());
         commandManager.add(new NowPlaying());
         commandManager.add(new Repeat());
+        commandManager.add(new Suggest());
         jda.addEventListener(commandManager);
     }
 

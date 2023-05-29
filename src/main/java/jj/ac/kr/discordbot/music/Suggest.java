@@ -1,40 +1,40 @@
 package jj.ac.kr.discordbot.music;
 
 import jj.ac.kr.discordbot.commands.ICommand;
+import jj.ac.kr.discordbot.connection.MusicData;
 import jj.ac.kr.discordbot.connection.mariadbcon.DbData;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.awt.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class Play implements ICommand {
+public class Suggest implements ICommand {
 
-    private Logger logger = LoggerFactory.getLogger(Play.class);
+    private Logger logger = LoggerFactory.getLogger(Suggest.class);
 
     @Override
     public String getName() {
-        return "play";
+        return "suggest";
     }
 
     @Override
     public String getDescription() {
-        return "구성원과 같이 노래를 들어보세요.";
+        return "음악을 추천해드릴게요.";
     }
 
     @Override
     public List<OptionData> getOptions() {
-        List<OptionData> options = new ArrayList<>();
-        options.add(new OptionData(OptionType.STRING, "url", "Input your url or text", true));
-        return options;
+        return null;
     }
 
     @Override
@@ -60,24 +60,25 @@ public class Play implements ICommand {
             }
         }
 
-        String name = event.getOption("url").getAsString();
-        try {
-            new URL(name);
-        } catch (MalformedURLException e) {
-            name = "ytsearch:" + name;
-        }
-
-        PlayerManager playerManager = PlayerManager.get();
-        event.reply("Playing... : [DB] 사용자의 검색 정보를 기록했습니다 !").queue();
-        playerManager.play(event.getGuild(), name);
-
+        GuildMusicManager guildMusicManager = PlayerManager.get().getGuildMusicManager(event.getGuild());
         DbData dbData = new DbData();
+        List<MusicData> musicDataList;
         try {
-            dbData.saveToDb(name, 0);
-        } catch (SQLException e) {
-            logger.info("[DB 저장 실패]: {}", e.getMessage());
-        }
+            musicDataList = dbData.findMusicToDb();
+            Collections.sort(musicDataList, (a, b) -> Integer.compare(b.getNum(), a.getNum()));
+            List<MusicData> items = musicDataList.subList(0, Math.min(musicDataList.size(), 5));
 
-        logger.info("{}님이 Play 기능을 사용했습니다.", member + name);
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+            embedBuilder.setTitle("추천 목록");
+            embedBuilder.setDescription("음악을 추천해서 보여드릴게요.");
+            embedBuilder.setColor(new Color(47, 221, 255));
+            for (int i = 0; i < items.size(); i++) {
+                embedBuilder.addField(i+1 + ". ", items.get(i).getName(), false);
+            }
+
+            event.replyEmbeds(embedBuilder.build()).queue();
+        } catch (SQLException e) {
+            logger.info("[MusicList]: error -> {}", e.getMessage() );
+        }
     }
 }
